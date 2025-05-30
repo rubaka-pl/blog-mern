@@ -5,6 +5,9 @@ import argon2 from 'argon2';
 import dotenv from 'dotenv';
 dotenv.config();
 async function seed() {
+    if (process.env.NODE_ENV !== 'development') {
+        throw new Error('Seeding is allowed only in development mode!');
+    }
     try {
         await mongoose.connect(
             process.env.MONGODB_URI);
