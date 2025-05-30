@@ -67,8 +67,6 @@ JWT_SECRET=your-secret-key
 NODE_ENV=development
 ```
 
-You can copy from `.env.example` if it exists.
-
 ---
 
 ## 🌱 Seed Demo Data
