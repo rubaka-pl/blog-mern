@@ -1,0 +1,47 @@
+import mongoose from 'mongoose';
+import UserModel from './models/User.js';
+import PostModel from './models/Post.js';
+import argon2 from 'argon2';
+
+async function seed() {
+    try {
+        await mongoose.connect(
+            process.env.MONGODB_URI);
+        console.log('MongoDB connected');
+
+        await UserModel.deleteMany({});
+        await PostModel.deleteMany({});
+
+        const passwordHash = await argon2.hash('123456');
+
+        const user = await UserModel.create({
+            email: 'demo@example.com',
+            fullName: 'Demo User',
+            avatarUrl: '',
+            passwordHash,
+        });
+
+        await PostModel.create([
+            {
+                title: 'Test Post 1',
+                text: 'This is a seeded test post',
+                tags: ['test', 'seed'],
+                user: user._id,
+            },
+            {
+                title: 'Test Post 2',
+                text: 'Another seeded post',
+                tags: ['init', 'mongodb'],
+                user: user._id,
+            },
+        ]);
+
+        console.log('✅ Seeding complete');
+        process.exit();
+    } catch (err) {
+        console.error('❌ Seeding failed:', err);
+        process.exit(1);
+    }
+}
+
+seed();
