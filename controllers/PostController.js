@@ -9,7 +9,7 @@ export const getAll = async (req, res) => {
     } catch (err) {
         console.log(err);
         res.status(500).json({
-            message: 'Не удалось отобразить статьи'
+            message: 'Failed to fetch posts'
         })
     }
 }
@@ -27,7 +27,7 @@ export const getOne = async (req, res) => {
 
         if (!doc) {
             return res.status(404).json({
-                message: 'Статья не найдена',
+                message: 'Post not found',
             });
         }
 
@@ -35,7 +35,7 @@ export const getOne = async (req, res) => {
     } catch (err) {
         console.log(err);
         res.status(500).json({
-            message: 'Не удалось отобразить статью',
+            message: 'Failed to fetch the post',
         });
     }
 };
@@ -45,13 +45,13 @@ export const remove = async (req, res) => {
         const postId = req.params.id;
 
         if (!mongoose.Types.ObjectId.isValid(postId)) {
-            return res.status(400).json({ message: 'Неверный формат ID' });
+            return res.status(400).json({ message: 'Invalid ID format' });
         }
 
         const doc = await PostModel.findById(postId);
 
         if (!doc) {
-            return res.status(404).json({ message: 'Статья не найдена' });
+            return res.status(404).json({ message: 'Post not found' });
         }
 
         console.log('req.userId:', req.userId);
@@ -63,15 +63,15 @@ export const remove = async (req, res) => {
             : doc.user.toString();
 
         if (authorId !== req.userId) {
-            return res.status(403).json({ message: 'Нет прав на удаление этой статьи' });
+            return res.status(403).json({ message: 'You do not have permission to delete this post' });
         }
 
         await PostModel.findByIdAndDelete(postId);
 
         res.json({ success: true });
     } catch (error) {
-        console.log('Ошибка удаления:', error);
-        res.status(500).json({ message: 'Не удалось удалить статью' });
+        console.log('Delete error:', error);
+        res.status(500).json({ message: 'Failed to delete the post' });
     }
 };
 
@@ -92,7 +92,7 @@ export const create = async (req, res) => {
     } catch (err) {
         console.log(err);
         res.status(500).json({
-            message: 'Не удалось создать статью',
+            message: 'Failed to create the post',
         });
     }
 };
@@ -103,7 +103,7 @@ export const update = async (req, res) => {
         const postId = req.params.id;
 
         if (!mongoose.Types.ObjectId.isValid(postId)) {
-            return res.status(400).json({ message: 'Неверный формат ID' });
+            return res.status(400).json({ message: 'Invalid ID format' });
         }
 
         const updatedDoc = await PostModel.findByIdAndUpdate(
@@ -113,13 +113,13 @@ export const update = async (req, res) => {
         );
 
         if (!updatedDoc) {
-            return res.status(404).json({ message: 'Статья не найдена' });
+            return res.status(404).json({ message: 'Post not found' });
         }
 
         res.json(updatedDoc);
     } catch (error) {
-        console.log('Ошибка обновления:', error);
-        res.status(500).json({ message: 'Не удалось обновить статью' });
+        console.log('Update error:', error);
+        res.status(500).json({ message: 'Failed to update the post' });
     }
 };
 

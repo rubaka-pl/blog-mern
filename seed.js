@@ -2,7 +2,8 @@ import mongoose from 'mongoose';
 import UserModel from './models/User.js';
 import PostModel from './models/Post.js';
 import argon2 from 'argon2';
-
+import dotenv from 'dotenv';
+dotenv.config();
 async function seed() {
     try {
         await mongoose.connect(

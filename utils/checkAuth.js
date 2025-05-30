@@ -5,17 +5,17 @@ const checkAuth = (req, res, next) => {
 
     if (token) {
         try {
-            const decoded = jwt.verify(token, 'secret123');
+            const decoded = jwt.verify(token, process.env.JWT_SECRET);
             req.userId = decoded._id;
             next();
         } catch (e) {
             return res.status(403).json({
-                message: 'Нет доступа',
+                message: 'Access denied',
             });
         }
     } else {
         return res.status(403).json({
-            message: 'Нет доступа',
+            message: 'Access denied',
         });
     }
 

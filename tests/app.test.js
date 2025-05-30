@@ -8,7 +8,7 @@ let token;
 let postId;
 
 beforeAll(async () => {
-    // Clear test DB
+    // Clear test   DB
     await UserModel.deleteMany({});
     await PostModel.deleteMany({});
 });

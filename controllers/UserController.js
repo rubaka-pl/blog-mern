@@ -37,7 +37,7 @@ export const register = async (req, res) => {
     } catch (err) {
         console.log(err);
         res.status(500).json({
-            message: 'Не удалось зарегистрироваться',
+            message: 'Failed to register',
         });
     }
 };
@@ -47,7 +47,7 @@ export const login = async (req, res) => {
         const user = await UserModel.findOne({ email: req.body.email });
         if (!user) {
             return res.status(404).json({
-                message: 'Пользователь не найден',
+                message: 'User not found',
             });
         }
 
@@ -55,7 +55,7 @@ export const login = async (req, res) => {
 
         if (!isValidPass) {
             return res.status(400).json({
-                message: 'Невереный логин или пароль',
+                message: 'Invalid login or password',
             });
         }
 
@@ -63,7 +63,7 @@ export const login = async (req, res) => {
             {
                 _id: user.id,
             },
-            'secret123',
+            process.env.JWT_SECRET,
             {
                 expiresIn: '30d',
             }
@@ -79,7 +79,7 @@ export const login = async (req, res) => {
     } catch (err) {
         console.log(err);
         res.status(500).json({
-            message: 'Не удалось авторизоваться',
+            message: 'Failed to authorize',
         });
     }
 };
@@ -90,7 +90,7 @@ export const checkMe = async (req, res) => {
 
         if (!user) {
             return res.status(404).json({
-                message: 'Пользователь не найден'
+                message: 'User not found'
             });
         }
 
@@ -101,7 +101,7 @@ export const checkMe = async (req, res) => {
     } catch (error) {
         console.log(error);
         res.status(500).json({
-            message: 'Нет доступа'
+            message: 'Access denied'
         });
     }
 };

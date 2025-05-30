@@ -1,34 +1,34 @@
 import { body } from 'express-validator'
 
 export const loginValidator = [
-    body('email', 'Неверный Email').isEmail(),
-    body('password', 'Неверный Пароль').isLength({ min: 5, max: 35 }),
+    body('email', 'Invalid email').isEmail(),
+    body('password', 'Invalid password').isLength({ min: 5, max: 35 }),
 ];
 
 export const registerValidator = [
-    body('email', 'Неверный Email').isEmail(),
-    body('password', 'Неверный Пароль').isLength({ min: 5, max: 35 }),
-    body('fullName', 'Имя должно содержать от 2 до 35 символов').isLength({ min: 2, max: 35 }),
+    body('email', 'Invalid email').isEmail(),
+    body('password', 'Invalid password').isLength({ min: 5, max: 35 }),
+    body('fullName', 'Full name must be between 2 and 35 characters').isLength({ min: 2, max: 35 }),
     body('avatarUrl').optional({ checkFalsy: true }).isURL(),
 ];
 
 export const postCreateValidator = [
     body('title')
-        .isString().withMessage('Заголовок должен быть строкой')
-        .isLength({ min: 3 }).withMessage('Введите заголовок статьи (не менее 3 символов)'),
+        .isString().withMessage('Title must be a string')
+        .isLength({ min: 3 }).withMessage('Enter a title (minimum 3 characters)'),
 
     body('text')
-        .isString().withMessage('Текст статьи должен быть строкой')
-        .isLength({ min: 3 }).withMessage('Введите текст статьи (не менее 10 символов)'),
+        .isString().withMessage('Text must be a string')
+        .isLength({ min: 10 }).withMessage('Enter post content (minimum 10 characters)'),
 
     body('tags')
         .optional()
-        .isArray().withMessage('Неверный формат тэгов (должен быть массив)'),
+        .isArray().withMessage('Invalid tags format (must be an array)'),
 
     body('tags.*')
-        .isString().withMessage('Каждый тег должен быть строкой'),
+        .isString().withMessage('Each tag must be a string'),
 
     body('imageUrl')
         .optional()
-        .isString().withMessage('Неверная ссылка на изображение')
+        .isString().withMessage('Invalid image URL')
 ];
