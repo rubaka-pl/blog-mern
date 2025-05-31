@@ -28,13 +28,19 @@ async function seed() {
         await PostModel.create([
             {
                 title: 'Test Post 1',
-                text: 'This is a seeded test post',
+                text: 'This is a seeded test post 1',
                 tags: ['test', 'seed'],
                 user: user._id,
             },
             {
                 title: 'Test Post 2',
-                text: 'Another seeded post',
+                text: 'Another seeded post 2',
+                tags: ['init', 'mongodb'],
+                user: user._id,
+            },
+            {
+                title: 'Test Post 3',
+                text: 'Another seeded post 3',
                 tags: ['init', 'mongodb'],
                 user: user._id,
             },

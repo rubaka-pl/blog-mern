@@ -22,8 +22,16 @@ const storage = multer.diskStorage({
     }
 });
 
-const upload = multer({ storage });
-
+const upload = multer({
+    storage,
+    fileFilter: (req, file, cb) => {
+        const allowedTypes = ['image/jpeg', 'image/png', 'image/webp'];
+        if (!allowedTypes.includes(file.mimetype)) {
+            return cb(new Error('Only images are allowed'));
+        }
+        cb(null, true);
+    },
+});
 
 
 app.use(express.json());
@@ -41,6 +49,7 @@ app.post('/upload', checkAuth, upload.single('image'), (req, res) => {
 });
 
 app.get('/posts', PostController.getAll);
+app.get('/tags', PostController.getLastTags)
 app.post('/posts', checkAuth, postCreateValidator, handleValidationErrors, PostController.create);
 app.get('/posts/:id', PostController.getOne);
 app.delete('/posts/:id', checkAuth, PostController.remove); // don`t forget to add check id ! ! !
