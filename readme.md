@@ -54,8 +54,8 @@ This is a **Node.js + Express.js** backend API for a blog platform. It includes 
 ### 1. Clone the repo and install packages
 
 ```bash
-git clone https://github.com/rubaka-pl/blog-mern
-cd blog-mern
+git clone https://github.com/rubaka-pl/blog-mern-BACKEND
+cd blog-mern-BACKEND
 npm install
 ```
 
