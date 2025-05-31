@@ -54,8 +54,8 @@ This is a **Node.js + Express.js** backend API for a blog platform. It includes 
 ### 1. Clone the repo and install packages
 
 ```bash
-git clone https://github.com/YOUR-USERNAME/blog-api.git
-cd blog-api
+git clone https://github.com/rubaka-pl/blog-mern-BACKEND
+cd blog-mern-BACKEND
 npm install
 ```
 
@@ -66,8 +66,6 @@ MONGODB_URI=your-mongodb-uri
 JWT_SECRET=your-secret-key
 NODE_ENV=development
 ```
-
-You can copy from `.env.example` if it exists.
 
 ---
 
