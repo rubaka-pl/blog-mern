@@ -2,6 +2,7 @@ import dotenv from 'dotenv';
 import express from 'express'
 import mongoose from 'mongoose';
 import multer from 'multer';
+import cors from 'cors'
 import { registerValidator, loginValidator, postCreateValidator } from './validations.js'
 import { checkAuth, handleValidationErrors } from './utils/index.js'
 import { UserController, PostController } from './controllers/index.js';
@@ -10,7 +11,7 @@ dotenv.config();
 
 
 const app = express();
-
+app.use(cors());
 
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
