@@ -31,19 +31,22 @@ async function seed() {
                 text: 'This is a seeded test post 1',
                 tags: ['test', 'seed'],
                 user: user._id,
+                imageUrl: 'https://habrastorage.org/getpro/habr/upload_files/3ce/79e/e8d/3ce79ee8d6348f455b02acbdf28ba535.jpg',
             },
             {
                 title: 'Test Post 2',
                 text: 'Another seeded post 2',
                 tags: ['init', 'mongodb'],
                 user: user._id,
+                imageUrl: 'https://habrastorage.org/getpro/habr/upload_files/b52/640/230/b52640230465131a203d911e32ee5120.jpg',
             },
             {
                 title: 'Test Post 3',
                 text: 'Another seeded post 3',
                 tags: ['init', 'mongodb'],
                 user: user._id,
-            },
+                imageUrl: 'https://trendymen.ru/images/article1/133875/prev1133875.jpg',
+            }
         ]);
 
         console.log('✅ Seeding complete');

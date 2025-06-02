@@ -1,10 +1,10 @@
 import PostModel from '../models/Post.js'
 import mongoose from 'mongoose';
+import CommentModel from '../models/Comment.js';
 
 export const getAll = async (req, res) => {
     try {
         const posts = await PostModel.find().populate('user', '-passwordHash -__v').exec();
-
         res.json(posts);
     } catch (err) {
         console.log(err);
@@ -23,7 +23,8 @@ export const getOne = async (req, res) => {
             { _id: postId },
             { $inc: { viewsCount: 1 } },
             { returnDocument: 'after' }
-        ).populate('user', '-passwordHash');
+        ).populate({ path: 'user', select: ['fullName', 'avatarUrl'] })
+
 
         if (!doc) {
             return res.status(404).json({
@@ -32,6 +33,7 @@ export const getOne = async (req, res) => {
         }
 
         res.json(doc);
+
     } catch (err) {
         console.log(err);
         res.status(500).json({
@@ -127,12 +129,113 @@ export const getLastTags = async (req, res) => {
     try {
         const posts = await PostModel.find().limit(5).exec();
         const tags = posts
-            .map(obj => obj.tags)
+            .map((obj) => obj.tags)
             .flat()
             .slice(0, 5);
         res.json(tags);
-    } catch (error) {
-        console.log('Update error:', error);
-        res.status(500).json({ message: 'Failed to update the post' });
+
+    } catch (err) {
+        console.log(err);
+        res.status(500).json
+            ({ message: 'Failed to update the post' });
     }
-}
+};
+export const getPostsByTag = async (req, res) => {
+    try {
+        const tag = req.params.tag;
+
+        const posts = await PostModel.find({ tags: tag })
+            .populate('user') // если нужно
+            .exec();
+
+        res.json(posts);
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: 'Failed to fetch posts by tag' });
+    }
+};
+
+
+export const getLast = async (req, res) => {
+    try {
+        const comments = await CommentModel.find()
+            .sort({ createdAt: -1 })
+            .limit(3)
+            .populate('user', 'fullName avatarUrl'); // тянем юзера
+
+        res.json(comments);
+    } catch (err) {
+        res.status(500).json({ message: 'Failed to get comments' });
+    }
+};
+
+export const getByPost = async (req, res) => {
+    try {
+        const comments = await CommentModel.find({ post: req.params.postId })
+            .sort({ createdAt: -1 })
+            .populate({ path: 'user', select: 'fullName avatarUrl' })
+
+        res.json(comments);
+    } catch (err) {
+        res.status(500).json({ message: 'Failed to get comments' });
+    }
+};
+
+
+export const createComment = async (req, res) => {
+    try {
+        const { postId, text } = req.body;
+
+        const comment = new CommentModel({
+            post: postId,
+            user: req.userId,
+            text,
+        });
+
+        const savedComment = await comment.save();
+
+        // Подтягиваем пользователя
+        const populatedComment = await savedComment.populate('user', 'fullName avatarUrl');
+
+        res.status(201).json(populatedComment);
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: 'Failed to create comment' });
+    }
+};
+
+
+export const getAllWithComments = async (req, res) => {
+    try {
+        const posts = await PostModel.find()
+            .populate('user', '-passwordHash -__v')
+            .lean(); // чтобы можно было добавить новое поле вручную
+
+        const comments = await CommentModel.find();
+
+        const postsWithCommentsCount = posts.map(post => {
+            const count = comments.filter(c => c.post.toString() === post._id.toString()).length;
+            return { ...post, commentsCount: count };
+        });
+
+        res.json(postsWithCommentsCount);
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: 'Failed to fetch posts with comments count' });
+    }
+};
+
+
+export const getAllComments = async (req, res) => {
+    try {
+        const comments = await CommentModel.find()
+            .sort({ createdAt: -1 })
+            .populate('user', 'fullName avatarUrl')
+            .populate('post', 'title');
+
+        res.json(comments);
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: 'Failed to fetch all comments' });
+    }
+};

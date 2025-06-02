@@ -19,8 +19,7 @@ const checkAuth = (req, res, next) => {
         });
     }
 
-    console.log('Token:', token);
-    console.log('Decoded:', req.userId);
+
 
 };
 

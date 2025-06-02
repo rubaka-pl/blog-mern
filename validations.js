@@ -15,11 +15,11 @@ export const registerValidator = [
 export const postCreateValidator = [
     body('title')
         .isString().withMessage('Title must be a string')
-        .isLength({ min: 3 }).withMessage('Enter a title (minimum 3 characters)'),
+        .isLength({ min: 1 }).withMessage('Enter a title (minimum 3 characters)'),
 
     body('text')
         .isString().withMessage('Text must be a string')
-        .isLength({ min: 10 }).withMessage('Enter post content (minimum 10 characters)'),
+        .isLength({ min: 1 }).withMessage('Enter post content (minimum 10 characters)'),
 
     body('tags')
         .optional()

@@ -6,7 +6,7 @@ import cors from 'cors'
 import { registerValidator, loginValidator, postCreateValidator } from './validations.js'
 import { checkAuth, handleValidationErrors } from './utils/index.js'
 import { UserController, PostController } from './controllers/index.js';
-
+import fs from 'fs'
 dotenv.config();
 
 
@@ -15,10 +15,14 @@ app.use(cors());
 
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
+        if (!fs.existsSync('uploads')) {
+            fs.mkdirSync('uploads')
+        }
         cb(null, 'uploads');
     },
     filename: (req, file, cb) => {
-        cb(null, file.originalname);
+        const uniqueName = `${Date.now()}-${file.originalname}`;
+        cb(null, uniqueName);
     }
 });
 
@@ -33,25 +37,32 @@ const upload = multer({
     },
 });
 
-
 app.use(express.json());
 app.use('/uploads', express.static('uploads'));
 
+app.post('/posts', checkAuth, postCreateValidator, handleValidationErrors, PostController.create);
 app.post('/auth/login', loginValidator, handleValidationErrors, UserController.login);
 app.post('/auth/register', registerValidator, handleValidationErrors, UserController.register);
-app.get('/auth/me', checkAuth, UserController.checkMe);
-
-
 app.post('/upload', checkAuth, upload.single('image'), (req, res) => {
     res.json({
-        url: `/uploads/${req.file.originalname}`,
+        url: `/uploads/${req.file.filename}`,
     });
 });
 
+
+app.get('/auth/me', checkAuth, UserController.checkMe);
+
 app.get('/posts', PostController.getAll);
-app.get('/tags', PostController.getLastTags)
-app.post('/posts', checkAuth, postCreateValidator, handleValidationErrors, PostController.create);
 app.get('/posts/:id', PostController.getOne);
+
+app.get('/tags', PostController.getLastTags)
+app.get('/posts/tags/:tag', PostController.getPostsByTag);
+app.get('/posts/with-comments', PostController.getAllWithComments);
+app.get('/comments/last', PostController.getLast);
+app.get('/comments/post/:postId', PostController.getByPost);
+app.post('/comments', checkAuth, PostController.createComment);
+app.get('/comments', PostController.getAllComments);
+
 app.delete('/posts/:id', checkAuth, PostController.remove); // don`t forget to add check id ! ! !
 app.patch('/posts/:id', checkAuth, postCreateValidator, handleValidationErrors, PostController.update);
 
