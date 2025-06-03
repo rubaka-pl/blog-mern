@@ -12,7 +12,8 @@ This is a **Node.js + Express.js** backend API for a blog platform. It includes 
 - **Mongoose** – ODM for MongoDB
 - **argon2** – password hashing
 - **jsonwebtoken (JWT)** – token-based authentication
-- **multer** – file/image uploads
+- ~~**multer** – file/image uploads~~
+- - **cloudinary** – file/image uploads
 - **express-validator** – validation middleware
 - **dotenv** – environment variable manager
 - **Jest + Supertest** – testing framework
