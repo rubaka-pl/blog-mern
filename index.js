@@ -68,13 +68,14 @@ app.get('/comments', PostController.getAllComments);
 app.get('/comments/last', PostController.getLast);
 app.get('/comments/post/:postId', PostController.getByPost);
 app.post('/comments', checkAuth, PostController.createComment);
+const PORT = process.env.PORT || 4441;
 
 // Запуск
 async function start() {
     try {
         await mongoose.connect(process.env.MONGODB_URI);
         console.log('✅ DB connected');
-        app.listen(4441, () => console.log('✅ Server running on port 4441'));
+        app.listen(PORT, () => console.log(`✅ Server running on port ${PORT}`));
     } catch (err) {
         console.error('❌ DB connection error:', err);
         process.exit(1);
